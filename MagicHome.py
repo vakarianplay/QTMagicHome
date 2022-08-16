@@ -60,7 +60,12 @@ class Controller:
         message = [0x31, result_r, result_g, result_b, 0x00, 0x0f]
         summe = checksumme(message)
         self.send(0x31, result_r, result_g, result_b, 0, 0x00, 0x0f, summe)
+        # print(str(message) + str(summe))
         print(bcolors.OKGREEN + "Color Changed to R:" + str(result_r) + " G:" + str(result_g) + " B:" + str(result_b))
+
+    def get_status(self):
+        self.send(0x81, 0x8A, 0x8B, 0x96)
+        print (self.s.recv(14))
 
     # Effects
 
