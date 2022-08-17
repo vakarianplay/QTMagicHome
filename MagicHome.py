@@ -65,7 +65,8 @@ class Controller:
 
     def get_status(self):
         self.send(0x81, 0x8A, 0x8B, 0x96)
-        print (self.s.recv(14))
+        # print (self.s.recv(14))
+        return self.s.recv(14)
 
     # Effects
 

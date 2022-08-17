@@ -6,6 +6,7 @@ import sys
 import qdarktheme
 import configparser
 import MagicHome
+import threading
 
 
 def conf():
@@ -31,14 +32,15 @@ class Window(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.initUi()
+        self.__initUi()
 
-    def initUi(self):
-        button = QPushButton("    Батон1    ", self)
+    def __initUi(self):
         button2 = QPushButton("    Батон2    ", self)
         button3 = QPushButton("    Батон3    ", self)
-        button.clicked.connect(self.color)
-        button2.clicked.connect(MainClass.connectToHost)
+        buttonOnOff.setText("Off")
+        buttonOnOff.clicked.connect(MainClass.onOffButton)
+        button2.clicked.connect(MainClass.fadeEffect)
+        # button2.clicked.connect(MainClass.changeColor)
 
         slider = QSlider(Qt.Orientation.Horizontal, self)
         slider.valueChanged.connect(MainClass.brightlight)
@@ -50,7 +52,7 @@ class Window(QMainWindow):
         layH.addWidget(button2)
         layH.addWidget(button3)
         lay.addStretch(1)
-        lay.addWidget(button)
+        lay.addWidget(buttonOnOff)
         lay.addLayout(layH)
         lay.addWidget(te)
 
@@ -63,44 +65,59 @@ class Window(QMainWindow):
         mainWidget.setLayout(lay)
         self.setCentralWidget(mainWidget)
 
-    def color(self):
-        print(colorPicker.getCurrentColor().getRgb())
-        # return current
+    def closeEvent(self, e):
+        MainClass.rgbFade.stop()
+
 
 class MainClass:
 
     MagicHome.ip = conf()
     magicHome = MagicHome.Controller()
+    stBtn = True
 
     def __init__(self):
         print("Test main class")
-        self.connectToHost()
+        self.__connectToHost()
 
     def textWidget(self):
         te.setPlainText("RED: " + str(colorPicker.getCurrentColor().getRgb()[0]) +
         "\nGREEN: " + str(colorPicker.getCurrentColor().getRgb()[1])
         + "\nBLUE: "+ str(colorPicker.getCurrentColor().getRgb()[2]) +
         "\n" + ip)
-        self.changeColor()
-        # print((colorPicker.getCurrentColor().getRgb()[0]))
-        # print((colorPicker.getCurrentColor().getRgb()[1]))
-        # print((colorPicker.getCurrentColor().getRgb()[2]))
+        self.__changeColor()
 
-    def connectToHost(self):
+    def __connectToHost(self):
         try:
             print("connected")
-            MainClass.magicHome.get_status()
+            st = MainClass.magicHome.get_status()
+            te.setPlainText(str(st))
             MainClass.magicHome.turn_on()
         except :
             print ("Wrong server")
 
-    def changeColor(self):
+    def onOffButton(self):
+        if MainClass.stBtn:
+            buttonOnOff.setText("On")
+            MainClass.magicHome.turn_off()
+            MainClass.stBtn = False
+        else:
+            buttonOnOff.setText("Off")
+            MainClass.magicHome.turn_on()
+            MainClass.stBtn = True
+
+
+    def __changeColor(self):
         MainClass.magicHome.changeColor(int(colorPicker.getCurrentColor().getRgb()[0]),
         int(colorPicker.getCurrentColor().getRgb()[1]),
         int(colorPicker.getCurrentColor().getRgb()[2]))
 
     def brightlight(value):
         MainClass.magicHome.changeColor(int(value), 0, 0)
+
+    def fadeEffect(self):
+        rgbFade = threading.Thread(name='rgbfade', target=MainClass.magicHome.rgbfade)
+        rgbFade.start()
+
 
 
 if __name__ == "__main__":
@@ -110,6 +127,7 @@ if __name__ == "__main__":
     app.setStyleSheet(qdarktheme.load_stylesheet())
     colorPicker = ColorPickerWidget(color=QColor(R, G, B), orientation='vertical')
     colorPicker.colorChanged.connect(main.textWidget)
+    buttonOnOff = QPushButton()
     te = QTextEdit()
     ex = Window()
     ex.setWindowTitle("Picker.")
