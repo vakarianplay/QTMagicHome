@@ -50,6 +50,9 @@ class Controller:
         print(bcolors.OKGREEN + "turn_on")
 
     def turn_off(self):
+        self.stopRgbFade()
+        self.stopRgbPulse()
+        self.send(0x71, 0x24, 0x0F, 0xA4)
         self.send(0x71, 0x24, 0x0F, 0xA4)
         print(bcolors.OKGREEN + "turn_off")
 
@@ -83,7 +86,9 @@ class Controller:
         self.policeMode = 0
         print("stop")
 
-    def rgbfade(self, sleep=0.1):
+    def rgbfade(self, sleep=0.01):
+        self.stopRgbFade()
+        self.stopRgbPulse()
         print("RGB Fade")
         self.fade = 1
         i = 1
@@ -120,6 +125,8 @@ class Controller:
         self.fade = 0
 
     def rgbPulse(self, sleep=0.0001):
+        self.stopRgbFade()
+        self.stopRgbPulse()
         print("RGB Fade")
         self.pulse = 1
         i = 1

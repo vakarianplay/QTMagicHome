@@ -35,17 +35,17 @@ class Window(QMainWindow):
         self.__initUi()
 
     def __initUi(self):
-        button2 = QPushButton("    Батон2    ", self)
-        button3 = QPushButton("    Батон3    ", self)
+        button2 = QPushButton("    Fade    ", self)
+        button3 = QPushButton("    Pulse    ", self)
         buttonOnOff.setText("Off")
         buttonOnOff.clicked.connect(MainClass.onOffButton)
         button2.clicked.connect(MainClass.fadeEffect)
+        button3.clicked.connect(MainClass.pulseEffect)
         # button2.clicked.connect(MainClass.changeColor)
 
         slider = QSlider(Qt.Orientation.Horizontal, self)
         slider.valueChanged.connect(MainClass.brightlight)
         slider.setRange(0, 255)
-        slider.setValue(int(bright))
 
         lay = QVBoxLayout()
         layH = QHBoxLayout()
@@ -59,7 +59,9 @@ class Window(QMainWindow):
         if type == "RGB":
             lay.addWidget(colorPicker)
         if type == "White":
+            slider.setValue(int(bright))
             lay.addWidget(slider)
+
 
         mainWidget = QWidget()
         mainWidget.setLayout(lay)
@@ -67,6 +69,7 @@ class Window(QMainWindow):
 
     def closeEvent(self, e):
         MainClass.rgbFade.stop()
+        MainClass.rgbPulse.stop()
 
 
 class MainClass:
@@ -89,11 +92,10 @@ class MainClass:
     def __connectToHost(self):
         try:
             print("connected")
-            st = MainClass.magicHome.get_status()
-            te.setPlainText(str(st))
             MainClass.magicHome.turn_on()
         except :
             print ("Wrong server")
+
 
     def onOffButton(self):
         if MainClass.stBtn:
@@ -107,6 +109,8 @@ class MainClass:
 
 
     def __changeColor(self):
+        MainClass.magicHome.stopRgbFade()
+        MainClass.magicHome.stopRgbPulse()
         MainClass.magicHome.changeColor(int(colorPicker.getCurrentColor().getRgb()[0]),
         int(colorPicker.getCurrentColor().getRgb()[1]),
         int(colorPicker.getCurrentColor().getRgb()[2]))
@@ -118,6 +122,9 @@ class MainClass:
         rgbFade = threading.Thread(name='rgbfade', target=MainClass.magicHome.rgbfade)
         rgbFade.start()
 
+    def pulseEffect(self):
+        rgbPulse = threading.Thread(name='rgbpulse', target=MainClass.magicHome.rgbPulse)
+        rgbPulse.start()
 
 
 if __name__ == "__main__":
