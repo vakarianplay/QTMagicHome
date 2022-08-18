@@ -62,7 +62,6 @@ class Window(QMainWindow):
             slider.setValue(int(bright))
             lay.addWidget(slider)
 
-
         mainWidget = QWidget()
         mainWidget.setLayout(lay)
         self.setCentralWidget(mainWidget)
@@ -93,9 +92,14 @@ class MainClass:
         try:
             print("connected")
             MainClass.magicHome.turn_on()
+            # self.status()
         except :
             print ("Wrong server")
 
+    def statusParce(self):
+        stByte = str(MainClass.magicHome.get_status().split()[0]).split('\\x')
+        print (stByte)
+        return stByte
 
     def onOffButton(self):
         if MainClass.stBtn:
