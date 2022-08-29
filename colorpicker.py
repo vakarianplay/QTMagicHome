@@ -92,7 +92,6 @@ class MainClass:
         try:
             print("connected")
             MainClass.magicHome.turn_on()
-            # self.status()
         except :
             print ("Wrong server")
 
