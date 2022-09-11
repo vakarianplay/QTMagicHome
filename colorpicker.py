@@ -41,7 +41,6 @@ class Window(QMainWindow):
         buttonOnOff.clicked.connect(MainClass.onOffButton)
         button2.clicked.connect(MainClass.fadeEffect)
         button3.clicked.connect(MainClass.pulseEffect)
-        # button2.clicked.connect(MainClass.changeColor)
 
         slider = QSlider(Qt.Orientation.Horizontal, self)
         slider.valueChanged.connect(MainClass.brightlight)
