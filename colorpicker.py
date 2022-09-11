@@ -139,6 +139,6 @@ if __name__ == "__main__":
     buttonOnOff = QPushButton()
     te = QTextEdit()
     ex = Window()
-    ex.setWindowTitle("Picker.")
+    ex.setWindowTitle("QTMagicHome")
     ex.show()
     sys.exit(app.exec_())
