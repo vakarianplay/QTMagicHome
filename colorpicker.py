@@ -35,12 +35,16 @@ class Window(QMainWindow):
         self.__initUi()
 
     def __initUi(self):
-        button2 = QPushButton("    Fade    ", self)
-        button3 = QPushButton("    Pulse    ", self)
+        buttonFade = QPushButton("    Fade    ", self)
+        buttonPulse = QPushButton("    Pulse    ", self)
+        buttonPolice = QPushButton("    Police    ", self)
+        buttonRandom = QPushButton("    Random    ", self)
         buttonOnOff.setText("Off")
         buttonOnOff.clicked.connect(MainClass.onOffButton)
-        button2.clicked.connect(MainClass.fadeEffect)
-        button3.clicked.connect(MainClass.pulseEffect)
+        buttonFade.clicked.connect(MainClass.fadeEffect)
+        buttonPulse.clicked.connect(MainClass.pulseEffect)
+        buttonPolice.clicked.connect(MainClass.policeEffect)
+        buttonRandom.clicked.connect(MainClass.randomEffect)
 
         slider = QSlider(Qt.Orientation.Horizontal, self)
         slider.valueChanged.connect(MainClass.brightlight)
@@ -48,8 +52,10 @@ class Window(QMainWindow):
 
         lay = QVBoxLayout()
         layH = QHBoxLayout()
-        layH.addWidget(button2)
-        layH.addWidget(button3)
+        layH.addWidget(buttonFade)
+        layH.addWidget(buttonPulse)
+        layH.addWidget(buttonPolice)
+        layH.addWidget(buttonRandom)
         lay.addStretch(1)
         lay.addWidget(buttonOnOff)
         lay.addLayout(layH)
@@ -68,6 +74,8 @@ class Window(QMainWindow):
     def closeEvent(self, e):
         MainClass.rgbFade.stop()
         MainClass.rgbPulse.stop()
+        MainClass.policeEf.stop()
+        MainClass.randomEf.stop()
 
 
 class MainClass:
@@ -91,6 +99,7 @@ class MainClass:
         try:
             print("connected")
             MainClass.magicHome.turn_on()
+            # self.statusParce()
         except :
             print ("Wrong server")
 
@@ -127,6 +136,14 @@ class MainClass:
     def pulseEffect(self):
         rgbPulse = threading.Thread(name='rgbpulse', target=MainClass.magicHome.rgbPulse)
         rgbPulse.start()
+
+    def policeEffect(self):
+        policeEf = threading.Thread(name='policeEf', target=MainClass.magicHome.police)
+        policeEf.start()
+
+    def randomEffect(self):
+        randomEf = threading.Thread(name='randomEf', target=MainClass.magicHome.Random)
+        randomEf.start()
 
 
 if __name__ == "__main__":
