@@ -105,7 +105,7 @@ class MainClass:
 
     def statusParce(self):
         stByte = str(MainClass.magicHome.get_status().split()[0]).split('\\x')
-        print (stByte)
+#         print (stByte)
         return stByte
 
     def onOffButton(self):
