@@ -2,8 +2,6 @@ import sys
 import argparse
 import configparser
 import MagicHome
-import threading
-
 
 def conf():
     global ip
