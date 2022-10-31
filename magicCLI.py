@@ -3,6 +3,7 @@ import argparse
 import configparser
 import MagicHome
 
+
 def conf():
     global ip
     global type
@@ -25,8 +26,10 @@ class MainClass:
     magicHome = MagicHome.Controller()
 
     def __init__(self):
-        print (args.colorArg)
-        # self.__connectToHost()
+        if int(args.colorArg[0]) == 0 and int(args.colorArg[1]) == 0 and int(args.colorArg[2]) == 0:
+            self.__turnOff()
+        else:
+            self.__connectToHost()
 
     def __connectToHost(self):
         try:
@@ -35,6 +38,9 @@ class MainClass:
             MainClass.magicHome.changeColor(int(args.colorArg[0]), int(args.colorArg[1]), int(args.colorArg[2]))
         except :
             print ("Wrong server")
+
+    def __turnOff(self):
+        MainClass.magicHome.turn_off()
 
     def statusParce(self):
         stByte = str(MainClass.magicHome.get_status().split()[0]).split('\\x')
@@ -46,4 +52,3 @@ if __name__ == "__main__":
     conf()
     args = Argument()
     main = MainClass()
-    # sys.exit(app.exec_())
