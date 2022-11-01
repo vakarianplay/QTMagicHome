@@ -3,14 +3,10 @@ import argparse
 import configparser
 import MagicHome
 
-
 def conf():
-    global ip
-    global type
     config = configparser.ConfigParser()
     config.read("settings.ini")
     ip = (config["Settings"]["IP"])
-    type = (config["Settings"]["Type"])
     return ip
 
 class Argument:
@@ -46,7 +42,6 @@ class MainClass:
         stByte = str(MainClass.magicHome.get_status().split()[0]).split('\\x')
 #         print (stByte)
         return stByte
-
 
 if __name__ == "__main__":
     conf()
