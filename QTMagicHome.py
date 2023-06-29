@@ -85,7 +85,7 @@ class MainClass:
     stBtn = True
 
     def __init__(self):
-        print("Test main class")
+        print("Init main class")
         self.__connectToHost()
 
     def textWidget(self):
